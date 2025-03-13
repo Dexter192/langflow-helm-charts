@@ -98,6 +98,8 @@ spec:
               value: "http://{{ template "langflow.fullname" . }}-backend.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.langflow.backend.service.port }}"
             - name: FRONTEND_PORT
               value: "{{ .Values.langflow.frontend.service.port }}"
+            - name: UPLOAD_LIMIT
+              value: "{{- range .Values.langflow.backend.env }}{{ if eq .name \"LANGFLOW_MAX_FILE_SIZE_UPLOAD\" }}{{ .value }}{{ end }}{{- end | default \"1M\" }}"
           resources:
             {{- toYaml .Values.langflow.frontend.resources | nindent 12 }}
       {{- with .Values.langflow.frontend.nodeSelector }}
